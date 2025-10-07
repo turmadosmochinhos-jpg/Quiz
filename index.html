@@ -5,140 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Aleatório: O Mundo dos Animais</title>
     <style>
-        /* Estilos CSS para o aspeto do quiz */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
-            line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            margin: 0;
-        }
-
-        .quiz-container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 20px 40px;
-            max-width: 800px;
-            width: 100%;
-        }
-        
-        #start-screen {
-            text-align: center;
-        }
-
-        h1 {
-            color: #0056b3;
-            text-align: center;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 10px;
-        }
-
-        #timer {
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .question-container {
-            margin-bottom: 25px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #fafafa;
-        }
-
-        .question-text {
-            font-weight: bold;
-            font-size: 1.2em;
-            margin-bottom: 15px;
-        }
-
-        .option-label {
-            display: block;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-
-        .option-label:hover {
-            background-color: #e9ecef;
-        }
-        
-        input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        #start-btn, #submit-btn, #play-again-btn {
-            display: block;
-            width: 50%;
-            margin: 20px auto 0 auto;
-            padding: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        #submit-btn {
-            width: 100%;
-            background-color: #28a745;
-        }
-
-        #play-again-btn {
-             width: 100%;
-        }
-        
-        #start-btn:hover, #play-again-btn:hover {
-             background-color: #0056b3;
-        }
-
-        #submit-btn:hover {
-            background-color: #218838;
-        }
-
-        #results-container {
-            margin-top: 30px;
-            padding: 20px;
-            font-size: 1.3em;
-            font-weight: bold;
-            text-align: center;
-            border-radius: 8px;
-        }
-
-        .correct {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-            color: #155724;
-        }
-
-        .incorrect {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
-        }
-        
-        .feedback-text {
-            font-size: 0.9em;
-            font-style: italic;
-            margin-top: 5px;
-            padding-left: 25px;
-            display: none;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f4f8; color: #333; line-height: 1.6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; margin: 0; }
+        .quiz-container { background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); padding: 20px 40px; max-width: 800px; width: 100%; }
+        #start-screen { text-align: center; }
+        h1 { color: #0056b3; text-align: center; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; }
+        #timer { text-align: center; font-size: 1.5em; font-weight: bold; color: #333; margin-bottom: 20px; }
+        .question-container { margin-bottom: 25px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #fafafa; }
+        .question-text { font-weight: bold; font-size: 1.2em; margin-bottom: 15px; }
+        .option-label { display: block; margin-bottom: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; cursor: pointer; transition: background-color 0.3s, border-color 0.3s; }
+        .option-label:hover { background-color: #e9ecef; }
+        input[type="radio"] { margin-right: 10px; }
+        #start-btn, #submit-btn, #play-again-btn { display: block; width: 50%; margin: 20px auto 0 auto; padding: 15px; font-size: 1.2em; font-weight: bold; color: #fff; background-color: #007bff; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+        #submit-btn { width: 100%; background-color: #28a745; }
+        #play-again-btn { width: 100%; }
+        #start-btn:hover, #play-again-btn:hover { background-color: #0056b3; }
+        #submit-btn:hover { background-color: #218838; }
+        #results-container { margin-top: 30px; padding: 20px; font-size: 1.3em; font-weight: bold; text-align: center; border-radius: 8px; }
+        .correct { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .incorrect { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .feedback-text { font-size: 0.9em; font-style: italic; margin-top: 5px; padding-left: 25px; display: none; }
     </style>
 </head>
 <body>
@@ -152,8 +37,7 @@
         
         <div id="quiz-screen" style="display: none;">
             <div id="timer">Tempo: 00:00</div>
-            <form id="quiz-form">
-                </form>
+            <form id="quiz-form"></form>
             <button id="submit-btn">Ver Resultados</button>
             <div id="results-container"></div>
             <button id="play-again-btn" style="display: none;">Jogar Outra Vez</button>
@@ -233,6 +117,10 @@
                 startScreen.style.display = 'none';
                 quizScreen.style.display = 'block';
                 startTimer();
+                
+                // NOVO: Informa a nova altura após construir o quiz
+                // Usamos um pequeno timeout para dar tempo ao navegador de renderizar tudo antes de medir
+                setTimeout(window.enviarAltura, 100);
             }
 
             function buildQuiz() {
@@ -299,11 +187,17 @@
                 resultsContainer.style.color = (correctCount >= shuffledQuestions.length / 2) ? '#155724' : '#721c24';
                 submitBtn.style.display = 'none';
                 playAgainBtn.style.display = 'block';
+
+                // NOVO: Informa a nova altura após mostrar os resultados
+                setTimeout(window.enviarAltura, 100);
             }
             
             function resetGame() {
                 quizScreen.style.display = 'none';
                 startScreen.style.display = 'block';
+
+                // NOVO: Informa a nova altura ao voltar para o ecrã inicial
+                setTimeout(window.enviarAltura, 100);
             }
 
             startBtn.addEventListener('click', startGame);
@@ -314,9 +208,8 @@
 
     <script>
       function enviarAltura() {
-        // Calcula a altura total do conteúdo
+        // Envolvemos a função globalmente para que possa ser chamada de dentro do outro script
         const alturaDoConteudo = document.body.scrollHeight;
-        // Envia a altura para a página "mãe" (o Blogger)
         if (window.parent) {
           window.parent.postMessage({
             type: 'iframeResize',
@@ -324,7 +217,10 @@
           }, '*');
         }
       }
-      // A altura só é enviada UMA VEZ, quando a página carrega por completo.
+      // Tornamos a função acessível globalmente através do objeto window
+      window.enviarAltura = enviarAltura;
+      
+      // A altura inicial é enviada quando a página carrega por completo.
       window.addEventListener('load', enviarAltura);
     </script>
 
