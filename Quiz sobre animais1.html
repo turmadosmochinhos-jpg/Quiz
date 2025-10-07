@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Aleatório: O Mundo dos Animais</title>
+    <style>
+        /* Estilos CSS para o aspeto do quiz */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        #start-screen {
+            text-align: center;
+        }
+
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        #timer {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .question-container {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .question-text {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .option-label {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .option-label:hover {
+            background-color: #e9ecef;
+        }
+        
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        #start-btn, #submit-btn, #play-again-btn {
+            display: block;
+            width: 50%;
+            margin: 20px auto 0 auto;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #submit-btn {
+            width: 100%;
+            background-color: #28a745;
+        }
+
+        #play-again-btn {
+             width: 100%;
+        }
+        
+        #start-btn:hover, #play-again-btn:hover {
+             background-color: #0056b3;
+        }
+
+        #submit-btn:hover {
+            background-color: #218838;
+        }
+
+        #results-container {
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        /* Classes para feedback visual */
+        .correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .feedback-text {
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 5px;
+            padding-left: 25px;
+            display: none; /* Escondido por defeito */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div id="start-screen">
+            <h1>Quiz: O Mundo dos Animais</h1>
+            <p>Testa os teus conhecimentos! São 20 perguntas e cada resposta certa vale 5 pontos. O tempo começa a contar quando iniciares o jogo.</p>
+            <button id="start-btn">Iniciar Jogo</button>
+        </div>
+        
+        <div id="quiz-screen" style="display: none;">
+            <div id="timer">Tempo: 00:00</div>
+            <form id="quiz-form">
+                </form>
+            <button id="submit-btn">Ver Resultados</button>
+            <div id="results-container"></div>
+            <button id="play-again-btn" style="display: none;">Jogar Outra Vez</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Todos os dados do quiz
+            const originalQuizData = [
+                { question: "Em que dia se celebra o Dia Mundial do Animal?", options: ["4 de outubro", "31 de outubro", "1 de janeiro", "25 de dezembro"], correctAnswer: "4 de outubro", rationale: "Esta é a data correta para a celebração do Dia Mundial do Animal." },
+                { question: "Qual é o principal objetivo do Dia Mundial do Animal?", options: [ "Lembrar a importância de proteger todos os animais.", "Oferecer presentes aos nossos animais de estimação.", "Visitar jardins zoológicos.", "Fazer uma festa com o tema de animais." ], correctAnswer: "Lembrar a importância de proteger todos os animais.", rationale: "O dia foi criado para nos consciencializar sobre a necessidade de cuidar e proteger os animais." },
+                { question: "De acordo com o texto, porque são as abelhas importantes para o ecossistema?", options: [ "Produzem mel para os humanos.", "Ajudam as plantas a crescer, transportando o pólen.", "Servem de alimento para outros animais.", "Fazem um zumbido agradável." ], correctAnswer: "Ajudam as plantas a crescer, transportando o pólen.", rationale: "O texto usa o exemplo das abelhas para ilustrar como os animais ajudam a manter o equilíbrio na natureza." },
+                { question: "Qual dos seguintes animais NÃO é mencionado no texto como estando em perigo?", options: ["O lince-ibérico", "O cão", "O panda-gigante", "O rinoceronte"], correctAnswer: "O cão", rationale: "O cão é mencionado como um animal de companhia e não está listado entre as espécies em perigo." },
+                { question: "Segundo o texto, qual é uma das razões para alguns animais estarem em perigo?", options: [ "Eles dormem muito durante o dia.", "São demasiado grandes e assustadores.", "A destruição dos seus habitats.", "Não gostam de viver perto das pessoas." ], correctAnswer: "A destruição dos seus habitats.", rationale: "O texto indica que a destruição dos locais onde os animais vivem é uma das principais ameaças." },
+                { question: "Em que ano foi criado o Dia Mundial do Animal?", options: ["2023", "1931", "1999", "1850"], correctAnswer: "1931", rationale: "O texto afirma que o dia foi estabelecido em 1931." },
+                { question: "O que significa 'biodiversidade' no contexto do texto?", options: [ "A biografia de animais famosos.", "A quantidade de animais de estimação numa cidade.", "A variedade de todas as espécies de animais no planeta.", "A divisão dos animais em grandes e pequenos." ], correctAnswer: "A variedade de todas as espécies de animais no planeta.", rationale: "Biodiversidade é a variedade de vida no planeta." },
+                { question: "Qual das seguintes ações é uma forma de ajudar os animais, de acordo com o texto?", options: [ "Não poluir o meio ambiente.", "Alimentar os animais selvagens.", "Fazer muito barulho na floresta.", "Comprar sempre animais." ], correctAnswer: "Não poluir o meio ambiente.", rationale: "Manter o ambiente limpo é uma forma importante de proteger os animais." },
+                { question: "Além de serem companheiros, que outra utilidade dos animais é mencionada no texto?", options: [ "Ajudam a construir casas.", "Fornecem alimentos e ajudam em tarefas.", "Ensinam-nos a falar.", "Conduzem os nossos carros." ], correctAnswer: "Fornecem alimentos e ajudam em tarefas.", rationale: "O texto dá o exemplo das galinhas (alimento) e dos cavalos (tarefas)." },
+                { question: "O que o Dia Mundial do Animal nos recorda sobre o tratamento dos animais?", options: [ "Que devemos ter medo deles.", "Que eles existem apenas para nos servir.", "Que devemos tratá-los com carinho e respeito.", "Que apenas os de estimação importam." ], correctAnswer: "Que devemos tratá-los com carinho e respeito.", rationale: "A mensagem principal do dia é o cuidado e respeito por todos os animais." },
+                { question: "Qual é o maior animal do mundo?", options: ["Elefante Africano", "Baleia-azul", "Tubarão-baleia", "Girafa"], correctAnswer: "Baleia-azul", rationale: "A baleia-azul é o maior animal que alguma vez existiu no nosso planeta." },
+                { question: "Que animal é conhecido por conseguir mudar de cor para se camuflar?", options: ["Leão", "Sapo", "Camaleão", "Pinguim"], correctAnswer: "Camaleão", rationale: "Os camaleões são mestres da camuflagem e podem mudar a cor da sua pele." },
+                { question: "Qual é o animal terrestre mais rápido do mundo?", options: ["Chita (ou Guepardo)", "Cavalo", "Lebre", "Leão"], correctAnswer: "Chita (ou Guepardo)", rationale: "A chita é famosa pela sua incrível velocidade em corridas curtas." },
+                { question: "As borboletas sentem o sabor das coisas através de que parte do corpo?", options: ["Das antenas", "Da boca", "Das asas", "Das patas"], correctAnswer: "Das patas", rationale: "As borboletas têm recetores de sabor nas suas patas." },
+                { question: "Qual destes animais é um mamífero que põe ovos?", options: ["Canguru", "Ornitorrinco", "Golfinho", "Morcego"], correctAnswer: "Ornitorrinco", rationale: "O ornitorrinco é um dos poucos mamíferos que põe ovos." },
+                { question: "Quantos corações tem um polvo?", options: ["Um", "Dois", "Três", "Oito"], correctAnswer: "Três", rationale: "O polvo tem três corações: um principal e dois para as guelras." },
+                { question: "O que é que os ursos polares comem principalmente?", options: ["Peixe", "Focas", "Pinguins", "Plantas e bagas"], correctAnswer: "Focas", rationale: "As focas são a principal presa dos ursos polares, fornecendo a gordura de que necessitam." },
+                { question: "Qual é o único mamífero que consegue voar?", options: ["Esquilo-voador", "Pinguim", "Morcego", "Coruja"], correctAnswer: "Morcego", rationale: "Os morcegos são os únicos mamíferos com a capacidade de voo ativo e sustentado." },
+                { question: "As girafas são conhecidas pelo seu longo pescoço. Para que serve principalmente?", options: ["Para beber água mais facilmente.", "Para alcançar as folhas mais altas das árvores.", "Para lutar contra os leões.", "Para verem mais longe."], correctAnswer: "Para alcançar as folhas mais altas das árvores.", rationale: "O pescoço longo dá-lhes uma grande vantagem para chegar a alimentos que outros não alcançam." },
+                { question: "Um grupo de leões é chamado de...", options: ["Manada", "Cardume", "Alcateia", "Bando"], correctAnswer: "Alcateia", rationale: "Um grupo social de leões chama-se alcateia." }
+            ];
+
+            const startScreen = document.getElementById('start-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const startBtn = document.getElementById('start-btn');
+            const quizForm = document.getElementById('quiz-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const resultsContainer = document.getElementById('results-container');
+            const playAgainBtn = document.getElementById('play-again-btn');
+            const timerElement = document.getElementById('timer');
+            
+            let shuffledQuestions = [];
+            let timerInterval = null;
+            let secondsElapsed = 0;
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+            
+            function formatTime(totalSeconds) {
+                const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+                const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+                return `${minutes}:${seconds}`;
+            }
+
+            function startTimer() {
+                secondsElapsed = 0;
+                timerElement.textContent = "Tempo: 00:00";
+                timerInterval = setInterval(() => {
+                    secondsElapsed++;
+                    timerElement.textContent = `Tempo: ${formatTime(secondsElapsed)}`;
+                }, 1000);
+            }
+
+            function stopTimer() {
+                clearInterval(timerInterval);
+            }
+
+            function startGame() {
+                shuffledQuestions = [...originalQuizData];
+                shuffleArray(shuffledQuestions);
+                buildQuiz();
+                
+                resultsContainer.innerHTML = '';
+                resultsContainer.style.backgroundColor = 'transparent';
+                playAgainBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+
+                startScreen.style.display = 'none';
+                quizScreen.style.display = 'block';
+                startTimer();
+            }
+
+            function buildQuiz() {
+                quizForm.innerHTML = ''; 
+                shuffledQuestions.forEach((questionData, questionIndex) => {
+                    const questionContainer = document.createElement('div');
+                    questionContainer.classList.add('question-container');
+                    
+                    const questionText = document.createElement('p');
+                    questionText.classList.add('question-text');
+                    questionText.textContent = `${questionIndex + 1}. ${questionData.question}`;
+                    questionContainer.appendChild(questionText);
+
+                    const shuffledOptions = [...questionData.options];
+                    shuffleArray(shuffledOptions);
+
+                    shuffledOptions.forEach(optionText => {
+                        const label = document.createElement('label');
+                        label.classList.add('option-label');
+
+                        const radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.name = `question${questionIndex}`;
+                        radio.value = optionText;
+                        
+                        label.appendChild(radio);
+                        label.appendChild(document.createTextNode(` ${optionText}`));
+                        
+                        const feedback = document.createElement('div');
+                        feedback.classList.add('feedback-text');
+                        label.appendChild(feedback);
+
+                        questionContainer.appendChild(label);
+                    });
+                    
+                    quizForm.appendChild(questionContainer);
+                });
+            }
+
+            function showResults() {
+                stopTimer();
+                let score = 0;
+                let correctCount = 0;
+                const finalTime = formatTime(secondsElapsed);
+                
+                const allQuestions = quizForm.querySelectorAll('.question-container');
+                
+                allQuestions.forEach((questionContainer, questionIndex) => {
+                    const selectedRadio = questionContainer.querySelector(`input[name="question${questionIndex}"]:checked`);
+                    const allOptionLabels = questionContainer.querySelectorAll('.option-label');
+                    const questionData = shuffledQuestions[questionIndex];
+
+                    questionContainer.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = true);
+
+                    const correctLabel = Array.from(allOptionLabels).find(label => label.textContent.trim() === questionData.correctAnswer);
+                    
+                    if (selectedRadio) {
+                        const selectedAnswerText = selectedRadio.value;
+                        if (selectedAnswerText === questionData.correctAnswer) {
+                            score += 5;
+                            correctCount++;
+                            selectedRadio.parentElement.classList.add('correct');
+                        } else {
+                            selectedRadio.parentElement.classList.add('incorrect');
+                            if (correctLabel) correctLabel.classList.add('correct');
+                        }
+                    } else {
+                         if (correctLabel) correctLabel.classList.add('correct');
+                    }
+                    
+                    if (correctLabel) {
+                        const feedbackDiv = correctLabel.querySelector('.feedback-text');
+                        feedbackDiv.textContent = `Justificação: ${questionData.rationale}`;
+                        feedbackDiv.style.display = 'block';
+                    }
+                });
+
+                resultsContainer.innerHTML = `Obtiveste ${score} pontos em ${finalTime}! (${correctCount} de ${shuffledQuestions.length} respostas corretas)`;
+                resultsContainer.style.backgroundColor = (correctCount >= shuffledQuestions.length / 2) ? '#d4edda' : '#f8d7da';
+                resultsContainer.style.color = (correctCount >= shuffledQuestions.length / 2) ? '#155724' : '#721c24';
+
+                submitBtn.style.display = 'none';
+                playAgainBtn.style.display = 'block';
+            }
+            
+            function resetGame() {
+                quizScreen.style.display = 'none';
+                startScreen.style.display = 'block';
+            }
+
+            startBtn.addEventListener('click', startGame);
+            submitBtn.addEventListener('click', showResults);
+            playAgainBtn.addEventListener('click', resetGame);
+        })();
+    </script>
+
+    <script>
+      function enviarAltura() {
+        const alturaDoConteudo = document.body.scrollHeight;
+        if (window.parent) {
+          window.parent.postMessage({
+            type: 'iframeResize',
+            height: alturaDoConteudo
+          }, '*');
+        }
+      }
+      window.addEventListener('load', enviarAltura);
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(enviarAltura, 200);
+      });
+    </script>
+
+</body>
+</html>
